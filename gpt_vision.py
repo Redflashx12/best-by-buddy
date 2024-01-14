@@ -17,7 +17,7 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 
-def get_list_of_items(image_path: Path):
+def get_list_of_items(image_path: Path, detail: str = "low"):
     # Getting the base64 string
     base64_image = encode_image(image_path)
 
@@ -39,26 +39,30 @@ def get_list_of_items(image_path: Path):
                         Example JSON:
                         ´´´
                         {
-                          "groceries": [
-                            "Banana",
-                            "Pineapple",
-                            "Chicken thigh",
-                            "Avocado",
-                            "Sparkling water",
-                            "Sparkling water",
-                          ]
+                            "groceries": [
+                                "Apples",
+                                "Bananas",
+                                "Baby carrots",
+                                "2% milk",
+                                "Whole wheat bread",
+                                "Organic eggs",
+                                "Greek yogurt"
+                            ]
                         }
                         ´´´
                         """,
                     },
                     {
                         "type": "image_url",
-                        "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{base64_image}",
+                            "detail": f"{detail if detail in ['low', 'high'] else 'low'}",
+                        },
                     },
                 ],
             }
         ],
-        "max_tokens": 300,
+        "max_tokens": 500,
     }
 
     response = requests.post(
