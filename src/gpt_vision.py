@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from pathlib import Path
 
@@ -16,6 +17,17 @@ api_key = os.getenv("API_KEY")
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
+
+
+def cleanup_response(response: requests.Response):
+    raw_output = response.json()["choices"][0]["message"]["content"]
+    cleaned_output = raw_output.replace("```json\n", "").replace("\n```", "")
+
+    json_object = json.loads(cleaned_output)
+
+    logger.info(f"JSON-Object: {json.dumps(json_object, indent=2)}")
+
+    return json_object
 
 
 def get_list_of_items(image_path: Path, detail: str = "low"):
@@ -70,7 +82,9 @@ def get_list_of_items(image_path: Path, detail: str = "low"):
         "https://api.openai.com/v1/chat/completions", headers=headers, json=payload
     )
 
-    print(response.json())
+    logger.debug(f"{response.json()=}")
+
+    return cleanup_response(response)
 
 
 def download_example_image(image_path: Path):
@@ -97,7 +111,7 @@ def download_example_image(image_path: Path):
 
 
 if __name__ == "__main__":
-    path = Path("images/groceries.jpg")
+    path = Path("../images/groceries.jpg")
 
     download_example_image(path)
 
