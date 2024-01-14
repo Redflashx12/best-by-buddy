@@ -47,10 +47,9 @@ def get_list_of_items(image_path: Path, detail: str = "low"):
                         "text": """
                         You are given an image of groceries. 
                         Please create a list of all items included in the image and output only a JSON of the list. 
-                        Nothing else but the JSON. The JSON should have one key called "groceries" and the list of items. 
+                        Do not output anything but the JSON. The JSON should have one key called "groceries" and the list of items. 
                         
                         Example JSON:
-                        ´´´
                         {
                             "groceries": [
                                 "Apples",
@@ -62,7 +61,6 @@ def get_list_of_items(image_path: Path, detail: str = "low"):
                                 "Greek yogurt"
                             ]
                         }
-                        ´´´
                         """,
                     },
                     {
@@ -76,6 +74,8 @@ def get_list_of_items(image_path: Path, detail: str = "low"):
             }
         ],
         "max_tokens": 500,
+        "seed": 42,
+        "temperature": 0.2,
     }
 
     response = requests.post(
