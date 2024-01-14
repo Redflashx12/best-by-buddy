@@ -4,6 +4,7 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
+from loguru import logger
 
 load_dotenv()
 
@@ -89,7 +90,7 @@ def download_example_image(image_path: Path):
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:  # filter out keep-alive new chunks
                     file.write(chunk)
-        print(
+        logger.info(
             f"The example image of the groceries has been downloaded and saved to your local path"
             f"\n'{image_path.resolve()}'."
         )
